@@ -1,48 +1,28 @@
-
-/*Serial.println(millis());
-Serial.println(ESP.getChipId());
-Serial.println(ESP.getCpuFreqMHz());
-Serial.println(ESP.getCycleCount());
-Serial.println(ESP.getFlashChipId());
-Serial.println(ESP.getFlashChipMode());
-Serial.println(ESP.getFlashChipRealSize());
-Serial.println(ESP.getFlashChipSize());
-Serial.println(ESP.getFlashChipSizeByChipId());
-Serial.println(ESP.getFlashChipSpeed());
-Serial.println(ESP.getFlashChipVendorId());
-Serial.println(ESP.getFullVersion());
-delay(5000);
-*/
-
-/*
-  Rui Santos
-  Complete project details
-   - Arduino IDE: https://RandomNerdTutorials.com/esp8266-nodemcu-ota-over-the-air-arduino/
-   - VS Code: https://RandomNerdTutorials.com/esp8266-nodemcu-ota-over-the-air-vs-code/
-     
-  This sketch shows a Basic example from the AsyncElegantOTA library: ESP8266_Async_Demo
-  https://github.com/ayushsharma82/AsyncElegantOTA
-*/
-
-#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncElegantOTA.h>
+#include "htmlPages.h"
+#include <FS.h>
 
-const char* ssid = "unifi";
-const char* password = "3N3FXAI4RP";
+const char *ssid = "unifi";
+const char *password = "3N3FXAI4RP";
 
 AsyncWebServer server(80);
 
-void setup(void) {
+
+
+
+void setup(void)
+{
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.println("");
 
   // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
     Serial.print(".");
   }
@@ -52,30 +32,26 @@ void setup(void) {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", "Hi! I am ESP8266.");
-  });
+  server.onNotFound(notFound);
 
-  AsyncElegantOTA.begin(&server);    // Start ElegantOTA
+  if (!SPIFFS.begin())
+  {
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+
+  server.on("/reset", handleResetDefault);
+  server.on("/config", handleConfigDefault);
+  server.on("/control", handleControlDefault);
+  server.on("/", handleRootDefault);
+
+
+
+  AsyncElegantOTA.begin(&server); // Start ElegantOTA
   server.begin();
   Serial.println("HTTP server started");
-
-/*
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-Serial.println("Firmware updated");
-*/
-
-
 }
 
-void loop(void) {
+void loop(void)
+{
 }
