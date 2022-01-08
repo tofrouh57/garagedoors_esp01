@@ -125,6 +125,10 @@ wl_status_t initWifi()
   return WiFi.status();
 }
 
+void initMQTT();
+ { MQTTclient.setServer(mqtt_server, 1883);
+  MQTTclient.setCallback(callback);
+}
 
 void setup(void)
 {
@@ -134,8 +138,6 @@ void setup(void)
   wl_status_t _wifiState = initWifi();
  // initMQTT();
 
-  MQTTclient.setServer(mqtt_server, 1883);
-  MQTTclient.setCallback(callback);
 
   server.onNotFound(notFound);
 
