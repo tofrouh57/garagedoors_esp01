@@ -7,22 +7,34 @@ server presents pages:
 
 
  program logic for preparation of web pages:
- - server.on("/", handleRootDefault)
-
-     defines the function to be called when a client accesses the root page
- - void handleRootDefault(AsyncWebServerRequest *request){    request->send(200, "text/html", handleRoot());
-        --> forwards the request to the function to prepare the HTML content and send the page to the client
- - String handleRoot()  { ......        return ptr; }
-        -->  creates the HTML string 
-
+ * server.on("/", handleRootDefault)
+     - defines the function to be called when a client accesses the root page
+ * void handleRootDefault(AsyncWebServerRequest *request){    request->send(200, "text/html", handleRoot());
+        - --> forwards the request to the function to prepare the HTML content and send the page to the client
+ * String handleRoot()  { ......        return ptr; }
+        - -->  creates the HTML string 
 
 
+To do:
+  * mDNS to find easily
+  * fix IP adress
+  * Config page
+  * logs page: display version / date last update. display WIFI details: signal strength
+  * fall back if wifi does not work
+  * do esp-now instead wifi?  -> no. webpage is important
+
+
+- switch to rainmaker??
 
 
 
 
 
 
+
+
+
+```
 
 backup:
 sliders
@@ -68,3 +80,4 @@ sliders
 </script>
 </body>
 </html>
+```

@@ -1,6 +1,10 @@
+
+
 #include <ESPAsyncWebServer.h>
 
 
+ extern int pulseTof;
+extern int pulseMy;
 
 
 void writeFile(fs::FS &fs, const char *path, const char *message);

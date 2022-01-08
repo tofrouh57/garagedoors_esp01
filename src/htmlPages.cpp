@@ -1,6 +1,12 @@
 
+#ifndef HTMLPAGES_H
+#define HTMLPAGES_H
 #include "htmlPages.h"
+#endif
+
 #include <FS.h>
+
+
 
 void writeFile(fs::FS &fs, const char *path, const char *message)
 {
@@ -119,11 +125,11 @@ void handleConfigDefault(AsyncWebServerRequest *request)
   Serial.print("in handleConfigDefault amount params : ");
   Serial.println(request->params());
   if (request->params() > 0)
-    { 
-       writeFile(SPIFFS, "/mqttServer", request->getParam("mqttServer")->value().c_str());
-       writeFile(SPIFFS, "/pTopic", request->getParam("pTopic")->value().c_str());
-       writeFile(SPIFFS, "/sTopic", request->getParam("sTopic")->value().c_str());
-    }
+  {
+    writeFile(SPIFFS, "/mqttServer", request->getParam("mqttServer")->value().c_str());
+    writeFile(SPIFFS, "/pTopic", request->getParam("pTopic")->value().c_str());
+    writeFile(SPIFFS, "/sTopic", request->getParam("sTopic")->value().c_str());
+  }
   request->send(200, "text/html", handleConfig());
 }
 
@@ -176,36 +182,31 @@ String handleControl()
 
 void handleControlDefault(AsyncWebServerRequest *request)
 {
+  int _gpio;
   Serial.print("in handleControlDefault amount params : ");
   Serial.println(request->params());
   if (request->params() > 0)
-    { 
-       if (request->getParam("door")->value() == "christophe") 
-       {
-         Serial.println("pulse for Chris door");
-         // _gpio = GPIO_PIN_TOF 
-       }
-       if (request->getParam("door")->value() == "myriam") 
-       {
-         Serial.println("pulse for Myriam door");
-         // _gpio = GPIO_PIN_MY
-       }
-
-         unsigned long _millis = millis();
-         // set _gpio High
-        do
-        {
-        } while (millis() < _millis + 500);
-         // set _gpio
+  {
+    if (request->getParam("door")->value() == "christophe")
+    {
+      Serial.println("GET request: pulse for Chris door");
+      pulseTof = 1;
     }
-  request->send(200, "text/html", handleControl());
+    /////////////////////////////////
+  
+  if (request->getParam("door")->value() == "myriam")
+  {
+    Serial.println("GET request : pulse for Myriam door");
+    pulseMy = 1;
+  }
+}
+request->send(200, "text/html", handleControl());
 }
 
 void handleResetDefault(AsyncWebServerRequest *request)
 {
-       writeFile(SPIFFS, "/mqttServer", "XXX.XXX.XXX.XXX");
-       writeFile(SPIFFS, "/pTopic", "garagedoors/publishTopic/");
-       writeFile(SPIFFS, "/sTopic", "garagedoor/subscribeTopic/");
+  writeFile(SPIFFS, "/mqttServer", "XXX.XXX.XXX.XXX");
+  writeFile(SPIFFS, "/pTopic", "garagedoors/publishTopic/");
+  writeFile(SPIFFS, "/sTopic", "garagedoor/subscribeTopic/");
   request->send(200, "text/plain", "parameters reset to default done !!");
 }
-
